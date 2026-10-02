@@ -1,0 +1,28 @@
+version: 2
+
+name: HEALTHCARE_COPILOT_APP
+database: USER$
+schema: PUBLIC
+query_warehouse: COMPUTE_WH
+
+label: "Patient 360 Copilot"
+description: "Healthcare copilot unifying EHR, claims, and clinical documents into a patient 360 with cited Q&A."
+icon: public/icon.svg
+
+ignore:
+  - node_modules
+  - .env*
+  - .next
+  - .git
+
+install:
+  commands:
+    - [npm, ci, "--include=dev"]
+build:
+  commands:
+    - [npm, run, build]
+    - [cp, -r, .next/static, .next/standalone/.next/static]
+    - [cp, -r, public, .next/standalone/public]
+    - [rm, -rf, node_modules]
+run:
+  command: [node, .next/standalone/server.js]
