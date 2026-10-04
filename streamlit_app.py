@@ -113,7 +113,7 @@ def to_df(rows):
 
 # --- Navigation ---
 if "page" not in st.session_state:
-    st.session_state.page = "patients"
+    st.session_state.page = "home"
 if "selected_patient" not in st.session_state:
     st.session_state.selected_patient = None
 if "chat_history" not in st.session_state:
@@ -131,6 +131,8 @@ with st.sidebar:
     st.title("🏥 Patient 360 Copilot")
     st.caption("Unified EHR, claims & clinical document intelligence")
     st.markdown("---")
+    if st.button("🏠 Home"):
+        nav_to("home")
     if st.button("📋 Patient List"):
         nav_to("patients")
     if st.button("💊 Drug Safety (CTGOV)"):
@@ -142,9 +144,231 @@ with st.sidebar:
 
 
 # ============================================================
+# PAGE: Home — Landing Page with Features
+# ============================================================
+if st.session_state.page == "home":
+
+    # CSS animations
+    st.markdown("""
+    <style>
+    @keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeInLeft {
+        from { opacity: 0; transform: translateX(-30px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+    @keyframes gradientShift {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+    .hero-title {
+        font-size: 2.8em;
+        font-weight: 700;
+        animation: fadeInUp 0.8s ease-out;
+        background: linear-gradient(135deg, #0f766e, #14b8a6, #0ea5e9);
+        background-size: 200% 200%;
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        animation: fadeInUp 0.8s ease-out, gradientShift 4s ease infinite;
+    }
+    .hero-subtitle {
+        font-size: 1.3em;
+        color: #64748b;
+        animation: fadeInUp 1.0s ease-out;
+        margin-bottom: 1.5em;
+    }
+    .feature-card {
+        background: linear-gradient(135deg, #f0fdfa, #f0f9ff);
+        border: 1px solid #ccfbf1;
+        border-radius: 12px;
+        padding: 24px;
+        margin: 8px 0;
+        animation: fadeInLeft 0.6s ease-out;
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .feature-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(15, 118, 110, 0.15);
+    }
+    .feature-icon {
+        font-size: 2.2em;
+        margin-bottom: 8px;
+    }
+    .feature-title {
+        font-size: 1.15em;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 6px;
+    }
+    .feature-desc {
+        font-size: 0.92em;
+        color: #475569;
+        line-height: 1.5;
+    }
+    .stat-box {
+        text-align: center;
+        padding: 20px;
+        background: linear-gradient(135deg, #0f766e, #14b8a6);
+        border-radius: 12px;
+        color: white;
+        animation: fadeInUp 1.2s ease-out;
+    }
+    .stat-number {
+        font-size: 2em;
+        font-weight: 700;
+    }
+    .stat-label {
+        font-size: 0.85em;
+        opacity: 0.9;
+    }
+    .tech-badge {
+        display: inline-block;
+        background: #f1f5f9;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 6px 14px;
+        margin: 4px;
+        font-size: 0.85em;
+        color: #334155;
+        animation: fadeInUp 1.4s ease-out;
+    }
+    .cta-button {
+        display: inline-block;
+        background: linear-gradient(135deg, #0f766e, #14b8a6);
+        color: white !important;
+        padding: 12px 32px;
+        border-radius: 8px;
+        font-size: 1.1em;
+        font-weight: 600;
+        text-decoration: none;
+        animation: fadeInUp 1.0s ease-out, pulse 2s ease-in-out 2s infinite;
+        margin: 8px;
+    }
+    </style>
+    """, unsafe_allow_html=True)
+
+    # Hero Section
+    st.markdown('<div class="hero-title">Patient 360 Healthcare Copilot</div>', unsafe_allow_html=True)
+    st.markdown('<div class="hero-subtitle">Unifying EHR records, clinical documents, insurance claims, and clinical trial safety data into one intelligent interface with cited, evidence-based answers.</div>', unsafe_allow_html=True)
+
+    # CTA Buttons
+    col_cta1, col_cta2, col_cta3, _ = st.columns([1, 1, 1, 1])
+    with col_cta1:
+        if st.button("📋 Explore Patients", key="cta_patients"):
+            nav_to("patients")
+            _rerun()
+    with col_cta2:
+        if st.button("💬 Try the Copilot", key="cta_copilot"):
+            nav_to("copilot")
+            _rerun()
+    with col_cta3:
+        if st.button("💊 Drug Safety", key="cta_safety"):
+            nav_to("adverse_effects")
+            _rerun()
+
+    st.markdown("---")
+
+    # Data Stats
+    st.markdown("### By the Numbers")
+    s1, s2, s3, s4, s5 = st.columns(5)
+    s1.markdown('<div class="stat-box"><div class="stat-number">50</div><div class="stat-label">Patients</div></div>', unsafe_allow_html=True)
+    s2.markdown('<div class="stat-box"><div class="stat-number">3,238</div><div class="stat-label">Structured Records</div></div>', unsafe_allow_html=True)
+    s3.markdown('<div class="stat-box"><div class="stat-number">228</div><div class="stat-label">Clinical Documents</div></div>', unsafe_allow_html=True)
+    s4.markdown('<div class="stat-box"><div class="stat-number">40</div><div class="stat-label">CTGOV Adverse Events</div></div>', unsafe_allow_html=True)
+    s5.markdown('<div class="stat-box"><div class="stat-number">8</div><div class="stat-label">Data Tables</div></div>', unsafe_allow_html=True)
+
+    st.markdown("")
+
+    # Feature Cards
+    st.markdown("### What This App Does")
+
+    f1, f2 = st.columns(2)
+    with f1:
+        st.markdown("""
+        <div class="feature-card" style="animation-delay: 0.1s">
+            <div class="feature-icon">🩺</div>
+            <div class="feature-title">Patient 360 View</div>
+            <div class="feature-desc">Complete patient profile with demographics, encounters, diagnoses, medications, lab results, claims, and risk scores — all in one dashboard with interactive charts and a visual patient journey timeline.</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div class="feature-card" style="animation-delay: 0.3s">
+            <div class="feature-icon">🤖</div>
+            <div class="feature-title">AI Copilot with Cited Evidence</div>
+            <div class="feature-desc">Ask questions in plain language. The copilot searches both structured data and clinical documents, returning answers with cited sources — never opaque predictions. Powered by Snowflake Cortex Agent.</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div class="feature-card" style="animation-delay: 0.5s">
+            <div class="feature-icon">📊</div>
+            <div class="feature-title">Risk Stratification</div>
+            <div class="feature-desc">Every patient scored with HCC, readmission risk, fall risk, and medication adherence. Filter by risk tier to prioritize care interventions for the most vulnerable patients.</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    with f2:
+        st.markdown("""
+        <div class="feature-card" style="animation-delay: 0.2s">
+            <div class="feature-icon">📄</div>
+            <div class="feature-title">Clinical Document Intelligence</div>
+            <div class="feature-desc">228 clinical documents — physician notes, discharge summaries, radiology reports, FDA safety alerts, and clinical guidelines — indexed for semantic search with source citations.</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div class="feature-card" style="animation-delay: 0.4s">
+            <div class="feature-icon">💊</div>
+            <div class="feature-title">CTGOV Drug Safety Integration</div>
+            <div class="feature-desc">Adverse effects from ClinicalTrials.gov linked to patient medications. Check any patient's active drugs against trial-reported side effects with frequency rates and serious event flags.</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown("""
+        <div class="feature-card" style="animation-delay: 0.6s">
+            <div class="feature-icon">🧠</div>
+            <div class="feature-title">AI Patient Summary</div>
+            <div class="feature-desc">Every patient 360 opens with an AI-generated clinical summary — a concise paragraph covering conditions, medications, risk level, and next-visit priorities. Built for new doctors taking over care.</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    st.markdown("---")
+
+    # Architecture / Tech Stack
+    st.markdown("### Built On Snowflake")
+    st.markdown("""
+    <div style="text-align: center; animation: fadeInUp 1.4s ease-out;">
+        <span class="tech-badge">Cortex Agent</span>
+        <span class="tech-badge">Cortex Analyst</span>
+        <span class="tech-badge">Cortex Search</span>
+        <span class="tech-badge">Cortex LLM</span>
+        <span class="tech-badge">Semantic View</span>
+        <span class="tech-badge">Streamlit-in-Snowflake</span>
+        <span class="tech-badge">CTGOV Data</span>
+        <span class="tech-badge">Synthetic EHR</span>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("")
+    st.markdown("""
+    <div style="text-align: center; color: #64748b; animation: fadeInUp 1.6s ease-out; margin-top: 1em;">
+        <em>All data is fully synthetic and de-identified. No real patient information is used.</em>
+    </div>
+    """, unsafe_allow_html=True)
+
+
+# ============================================================
 # PAGE: Patient List / Risk Stratification
 # ============================================================
-if st.session_state.page == "patients":
+elif st.session_state.page == "patients":
     st.header("Patient Risk Stratification")
 
     patients = get_patients()
@@ -204,7 +428,7 @@ if st.session_state.page == "patients":
 
 
 # ============================================================
-# PAGE: Patient 360 Detail
+# PAGE: Patient 360 Detail — Dashboard with Patient Journey
 # ============================================================
 elif st.session_state.page == "patient_detail":
     pid = st.session_state.selected_patient
@@ -231,7 +455,56 @@ elif st.session_state.page == "patient_detail":
                 nav_to("copilot", pid)
                 _rerun()
 
-            # Demographics
+            # ============================================================
+            # AI PATIENT SUMMARY — for new doctors at a glance
+            # ============================================================
+            st.subheader("📋 Patient Summary")
+            chronic_list = ", ".join(d["DESCRIPTION"] for d in diagnoses if d["IS_CHRONIC"])
+            active_med_list = ", ".join(f"{m['DRUG_NAME']} {m['DOSAGE']}" for m in medications if m["IS_ACTIVE"])
+            abnormal_list = ", ".join(f"{l['TEST_NAME']}={l['VALUE_NUMERIC']} {l['UNIT']} ({l['FLAG']})"
+                                      for l in labs if l["FLAG"] != "Normal")[:500]
+            recent_enc = encounters[0] if encounters else None
+            recent_str = (f"Most recent visit: {recent_enc['ENCOUNTER_TYPE']} on {recent_enc['ENCOUNTER_DATE']} "
+                          f"for {recent_enc['CHIEF_COMPLAINT']} ({recent_enc['DISPOSITION']})") if recent_enc else "No recent encounters."
+
+            hcc = p["HCC_SCORE"] if p["HCC_SCORE"] is not None else "N/A"
+            readmit = p["READMISSION_RISK"] if p["READMISSION_RISK"] is not None else "N/A"
+            med_adh = p["MEDICATION_ADHERENCE_SCORE"] if p["MEDICATION_ADHERENCE_SCORE"] is not None else "N/A"
+            risk_factors = p["RISK_FACTORS"] if p["RISK_FACTORS"] is not None else "None noted"
+
+            summary_prompt = f"""You are a clinical summarizer. Write a concise 4-5 sentence patient summary for a new doctor taking over care. Include:
+1. Patient basics (age, gender, insurance)
+2. Key chronic conditions and risk level
+3. Current active medications (highlight any polypharmacy concerns)
+4. Recent clinical activity and any flags (abnormal labs, high risk scores)
+5. One sentence on what to prioritize in the next visit.
+
+Patient: {p['FIRST_NAME']} {p['LAST_NAME']}, {p['GENDER']}, DOB {p['DATE_OF_BIRTH']}, {p['INSURANCE_TYPE']} ({p['INSURANCE_PAYER']})
+Risk Tier: {tier}, HCC Score: {hcc}, Readmission Risk: {readmit}%, Med Adherence: {med_adh}%
+Risk Factors: {risk_factors}
+Chronic Conditions: {chronic_list or 'None documented'}
+Active Medications: {active_med_list or 'None'}
+Abnormal Labs: {abnormal_list or 'None'}
+{recent_str}
+Total Encounters: {len(encounters)}, Total Claims Billed: ${sum(c['BILLED_AMOUNT'] for c in claims):,.0f}
+
+Write the summary in plain clinical language. Do not use bullet points. This is synthetic data."""
+
+            summary_key = f"summary_{pid}"
+            if summary_key not in st.session_state:
+                with st.spinner("Generating patient summary..."):
+                    try:
+                        result = run_query(f"""
+                            SELECT SNOWFLAKE.CORTEX.COMPLETE('llama3.1-8b', $${summary_prompt}$$) AS summary
+                        """)
+                        st.session_state[summary_key] = result[0]["SUMMARY"] if result else "Summary unavailable."
+                    except Exception as e:
+                        st.session_state[summary_key] = f"Could not generate summary: {e}"
+
+            st.info(st.session_state[summary_key])
+            st.markdown("---")
+
+            # ---- ROW 1: Demographics ----
             st.subheader("Demographics")
             d1, d2, d3, d4, d5 = st.columns(5)
             d1.metric("DOB", str(p["DATE_OF_BIRTH"]))
@@ -240,7 +513,7 @@ elif st.session_state.page == "patient_detail":
             d4.metric("Payer", p["INSURANCE_PAYER"])
             d5.metric("PCP", p["PCP_NAME"])
 
-            # Risk scores
+            # ---- ROW 2: Risk Scores ----
             if p["RISK_TIER"]:
                 st.subheader("Risk Assessment")
                 r1, r2, r3, r4 = st.columns(4)
@@ -251,19 +524,157 @@ elif st.session_state.page == "patient_detail":
                 if p["RISK_FACTORS"]:
                     st.info(f"**Risk Factors:** {p['RISK_FACTORS']}")
 
-            # Claims summary
+            # ---- ROW 3: Key Metrics ----
             total_billed = sum(c["BILLED_AMOUNT"] for c in claims)
             total_paid = sum(c["PAID_AMOUNT"] for c in claims)
-            st.subheader("Claims Summary")
-            cs1, cs2, cs3, cs4 = st.columns(4)
-            cs1.metric("Total Billed", f"${total_billed:,.0f}")
-            cs2.metric("Total Paid", f"${total_paid:,.0f}")
-            cs3.metric("Encounters", len(encounters))
-            cs4.metric("Diagnoses", len(diagnoses))
+            active_meds = [m for m in medications if m["IS_ACTIVE"]]
+            chronic_dx = [d for d in diagnoses if d["IS_CHRONIC"]]
+            abnormal_labs = [l for l in labs if l["FLAG"] != "Normal"]
+            st.subheader("Key Metrics")
+            k1, k2, k3, k4, k5, k6 = st.columns(6)
+            k1.metric("Encounters", len(encounters))
+            k2.metric("Diagnoses", len(diagnoses))
+            k3.metric("Active Meds", len(active_meds))
+            k4.metric("Abnormal Labs", len(abnormal_labs))
+            k5.metric("Total Billed", f"${total_billed:,.0f}")
+            k6.metric("Total Paid", f"${total_paid:,.0f}")
 
-            # Tabbed data
-            tab_enc, tab_dx, tab_med, tab_lab, tab_clm = st.tabs(
-                ["Encounters", "Diagnoses", "Medications", "Labs", "Claims"]
+            st.markdown("---")
+
+            # ============================================================
+            # PATIENT JOURNEY TIMELINE
+            # ============================================================
+            st.subheader("📅 Patient Journey Timeline")
+            if encounters:
+                journey_df = to_df(encounters).sort_values("ENCOUNTER_DATE")
+                # Show timeline as a table with visual indicators
+                journey_display = []
+                for _, row in journey_df.iterrows():
+                    enc_type = str(row.get("ENCOUNTER_TYPE", ""))
+                    icon = {"Emergency": "🚨", "Inpatient": "🏥", "Office Visit": "🩺",
+                            "Telehealth": "📱", "Urgent Care": "⚡", "Lab Only": "🔬",
+                            "Imaging": "📷", "Procedure": "🔧"}.get(enc_type, "📋")
+                    journey_display.append({
+                        "Date": str(row.get("ENCOUNTER_DATE", "")),
+                        "Type": f"{icon} {enc_type}",
+                        "Department": str(row.get("DEPARTMENT", "")),
+                        "Chief Complaint": str(row.get("CHIEF_COMPLAINT", "")),
+                        "Provider": str(row.get("PROVIDER_NAME", "")),
+                        "Disposition": str(row.get("DISPOSITION", "")),
+                        "Facility": str(row.get("FACILITY", "")),
+                    })
+                st.dataframe(pd.DataFrame(journey_display), use_container_width=True)
+
+                # Encounters over time chart
+                enc_by_month = journey_df.copy()
+                enc_by_month["MONTH"] = pd.to_datetime(enc_by_month["ENCOUNTER_DATE"]).dt.to_period("M").astype(str)
+                month_counts = enc_by_month.groupby("MONTH").size().reset_index(name="Encounters")
+                st.caption("Encounters over time")
+                st.bar_chart(month_counts.set_index("MONTH"))
+            else:
+                st.info("No encounters recorded.")
+
+            st.markdown("---")
+
+            # ============================================================
+            # DASHBOARD CHARTS
+            # ============================================================
+            chart_left, chart_right = st.columns(2)
+
+            with chart_left:
+                # Encounter type breakdown
+                st.subheader("Encounter Types")
+                if encounters:
+                    enc_df = to_df(encounters)
+                    type_counts = enc_df["ENCOUNTER_TYPE"].value_counts().reset_index()
+                    type_counts.columns = ["Type", "Count"]
+                    st.bar_chart(type_counts.set_index("Type"))
+                else:
+                    st.info("No data.")
+
+                # Diagnosis categories
+                st.subheader("Diagnosis Categories")
+                if diagnoses:
+                    dx_df = to_df(diagnoses)
+                    cat_counts = dx_df["CATEGORY"].value_counts().reset_index()
+                    cat_counts.columns = ["Category", "Count"]
+                    st.bar_chart(cat_counts.set_index("Category"))
+                else:
+                    st.info("No data.")
+
+            with chart_right:
+                # Medication classes
+                st.subheader("Medication Classes")
+                if medications:
+                    med_df = to_df(medications)
+                    class_counts = med_df["DRUG_CLASS"].value_counts().reset_index()
+                    class_counts.columns = ["Drug Class", "Count"]
+                    st.bar_chart(class_counts.set_index("Drug Class"))
+                else:
+                    st.info("No data.")
+
+                # Claims by status
+                st.subheader("Claims by Status")
+                if claims:
+                    clm_df = to_df(claims)
+                    status_counts = clm_df["STATUS"].value_counts().reset_index()
+                    status_counts.columns = ["Status", "Count"]
+                    st.bar_chart(status_counts.set_index("Status"))
+                else:
+                    st.info("No data.")
+
+            st.markdown("---")
+
+            # ============================================================
+            # LAB RESULTS TREND
+            # ============================================================
+            st.subheader("🔬 Lab Results")
+            if labs:
+                lab_df = to_df(labs)
+                test_names = sorted(lab_df["TEST_NAME"].unique())
+                selected_test = st.selectbox("Select lab test to view trend", test_names)
+                filtered_lab = lab_df[lab_df["TEST_NAME"] == selected_test].sort_values("RESULT_DATE")
+                if len(filtered_lab) > 1:
+                    chart_data = filtered_lab[["RESULT_DATE", "VALUE_NUMERIC"]].copy()
+                    chart_data = chart_data.rename(columns={"RESULT_DATE": "Date", "VALUE_NUMERIC": "Value"})
+                    chart_data["Date"] = pd.to_datetime(chart_data["Date"])
+                    st.line_chart(chart_data.set_index("Date"))
+                st.dataframe(filtered_lab, use_container_width=True)
+            else:
+                st.info("No lab results.")
+
+            st.markdown("---")
+
+            # ============================================================
+            # MEDICATION SAFETY (CTGOV Link)
+            # ============================================================
+            if active_meds:
+                st.subheader("⚠️ Medication Safety — CTGOV Adverse Effects")
+                drug_names = list(set(m["DRUG_NAME"] for m in active_meds))
+                drug_list_sql = ",".join(f"'{d}'" for d in drug_names)
+                safety_data = run_query(f"""
+                    SELECT DRUG_NAME, ADVERSE_EVENT, ORGAN_SYSTEM, SEVERITY,
+                           FREQUENCY_PCT, IS_SERIOUS, NCT_ID
+                    FROM {HC_DB}.{HC_SCHEMA}.CTGOV_ADVERSE_EFFECTS
+                    WHERE DRUG_NAME IN ({drug_list_sql})
+                    ORDER BY IS_SERIOUS DESC, FREQUENCY_PCT DESC
+                """)
+                if safety_data:
+                    serious = [r for r in safety_data if r["IS_SERIOUS"]]
+                    if serious:
+                        st.warning(f"⚠️ {len(serious)} serious adverse event(s) reported in CTGOV for this patient's active medications")
+                    st.dataframe(to_df(safety_data), use_container_width=True)
+                else:
+                    st.success("No CTGOV adverse effects data for this patient's active medications.")
+
+            st.markdown("---")
+
+            # ============================================================
+            # DETAILED TABS (same as before)
+            # ============================================================
+            st.subheader("Detailed Records")
+            tab_enc, tab_dx, tab_med, tab_clm = st.tabs(
+                ["Encounters", "Diagnoses", "Medications", "Claims"]
             )
             with tab_enc:
                 df = to_df(encounters)
@@ -283,12 +694,6 @@ elif st.session_state.page == "patient_detail":
                     st.dataframe(df, use_container_width=True)
                 else:
                     st.info("No medications.")
-            with tab_lab:
-                df = to_df(labs)
-                if len(df):
-                    st.dataframe(df, use_container_width=True)
-                else:
-                    st.info("No labs.")
             with tab_clm:
                 df = to_df(claims)
                 if len(df):
@@ -436,19 +841,25 @@ elif st.session_state.page == "copilot":
                     excerpt = c["text"][:300] + "..." if len(c["text"]) > 300 else c["text"]
                     st.caption(excerpt)
 
-    # Process pending user message
+    # Process pending user message (only if not already answered)
+    if "pending_answered" not in st.session_state:
+        st.session_state.pending_answered = set()
+
     if st.session_state.chat_history and st.session_state.chat_history[-1]["role"] == "user":
-        last_q = st.session_state.chat_history[-1]["content"]
-        with st.spinner("Thinking..."):
-            text, citations = call_agent(last_q, patient_scope if patient_scope else None)
-        st.markdown(f"**🤖 Copilot:** {text}")
-        if citations:
-            with st.expander(f"📄 {len(citations)} source(s)"):
-                for c in citations:
-                    st.markdown(f"**{c['title']}**")
-                    excerpt = c["text"][:300] + "..." if len(c["text"]) > 300 else c["text"]
-                    st.caption(excerpt)
-        st.session_state.chat_history.append({"role": "assistant", "content": text, "citations": citations})
+        msg_idx = len(st.session_state.chat_history) - 1
+        if msg_idx not in st.session_state.pending_answered:
+            last_q = st.session_state.chat_history[-1]["content"]
+            with st.spinner("Thinking..."):
+                text, citations = call_agent(last_q, patient_scope if patient_scope else None)
+            st.markdown(f"**🤖 Copilot:** {text}")
+            if citations:
+                with st.expander(f"📄 {len(citations)} source(s)"):
+                    for c in citations:
+                        st.markdown(f"**{c['title']}**")
+                        excerpt = c["text"][:300] + "..." if len(c["text"]) > 300 else c["text"]
+                        st.caption(excerpt)
+            st.session_state.chat_history.append({"role": "assistant", "content": text, "citations": citations})
+            st.session_state.pending_answered.add(msg_idx)
 
     # Text input for questions
     user_input = st.text_input("Ask a clinical or regulatory question...", key="chat_input")
