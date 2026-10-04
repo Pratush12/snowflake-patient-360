@@ -62,6 +62,19 @@ Landing page with feature cards, live data statistics (50 patients, 3,238 record
 
 ---
 
+## Risk Stratification Scores Explained
+
+| Score | What It Measures | Example | What It Means |
+|-------|-----------------|---------|---------------|
+| **HCC Score** | How expensive this patient will be (Hierarchical Condition Category) | 3.85 | The average is 1.0. A score of 3.85 means this patient is predicted to cost ~4x the average patient |
+| **Readmission Risk** | Chance of coming back to the hospital within 30 days | 72% | Very high — this patient needs a follow-up call after discharge |
+| **Fall Risk** | Chance of falling (especially for elderly patients) | 45% | Moderate — consider home safety assessment |
+| **Med Adherence** | How well they take their medications | 58% | Low — they're probably skipping doses, which explains why their diabetes is uncontrolled |
+
+These scores drive the **risk tier** assigned to each patient (Critical, High, Moderate, Low), which care managers use to prioritize interventions. The Patient List page lets you filter and sort by any of these scores.
+
+---
+
 ## Architecture
 
 ```
